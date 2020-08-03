@@ -11,9 +11,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Create a GLSurfaceView instance and set it
-        // as the ContentView for this Activity.
-        gLView = MyGLSurfaceView(this)
-        setContentView(gLView)
+        setContentView(R.layout.activity_main)
+        gLView = findViewById(R.id.oglView)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        gLView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        gLView.onResume()
     }
 }

@@ -2,18 +2,25 @@ package com.reno.flippingcoinsgame
 
 import android.content.Context
 import android.opengl.GLSurfaceView
+import android.util.AttributeSet
 
-class MyGLSurfaceView(context: Context) : GLSurfaceView(context) {
+class MyGLSurfaceView : GLSurfaceView {
+    constructor(context: Context?) : super(context) {
+        init()
+    }
 
-    private val renderer: MyGLRenderer
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init()
+    }
 
-    init {
-        // Create an OpenGL ES 2.0 context
+    private fun init() {
+        // use opengl es 2.0
         setEGLContextClientVersion(2)
 
-        renderer = MyGLRenderer()
+        // store opengl context
+        preserveEGLContextOnPause = true
 
-        // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(renderer)
+        // set renderer
+        setRenderer(MyGLRenderer(context))
     }
 }
