@@ -37,11 +37,13 @@ class MyGLRenderer : GLSurfaceView.Renderer {
      * Sets the rotation angle of the triangle shape (mTriangle).
      */
     var angle = 0f
-    var x = 0.1f
-    var y = 0.1f
-    var width = 0
-    var height = 0
-    var ratio = 0f
+    var x = 0.0f
+    var y = 0.0f
+    var scale = 1.0f
+
+    private var width = 0
+    private var height = 0
+    private var ratio = 0f
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
         // Set the background frame color
@@ -52,6 +54,9 @@ class MyGLRenderer : GLSurfaceView.Renderer {
     }
 
     override fun onDrawFrame(unused: GL10) {
+        val transform = FloatArray(16)
+        Matrix.setIdentityM(transform, 0)
+
         val scratch = FloatArray(16)
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
@@ -66,18 +71,23 @@ class MyGLRenderer : GLSurfaceView.Renderer {
         // Leave this code out when using TouchEvents.
 //         val time = SystemClock.uptimeMillis() % 4000L
 //         val angle = 0.090f * time
-//        Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, 1.0f
+        Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, 1.0f)
         // Combine the rotation matrix with the projection and camera view
         // Note that the mMVPMatrix factor *must be first* in order
         // for the matrix multiplication product to be correct.
-//        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0)
+        Matrix.multiplyMM(transform, 0, transform, 0, mRotationMatrix, 0)
+
+        Matrix.setIdentityM(mScaleMatrix, 0)
+        Matrix.scaleM(mScaleMatrix, 0, scale, scale, scale)
+        Matrix.multiplyMM(transform, 0, transform, 0, mScaleMatrix, 0)
+
         Matrix.setIdentityM(mTranslationMatrix, 0)
         val normalX = (x / width) * 2 - 1
         val normalY = ((y / height) * ratio * 2) - ratio
 
-        Matrix.translateM(mTranslationMatrix,0, -normalX, -normalY, 0f)
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mTranslationMatrix, 0)
-//        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mTranslationMatrix, 0)
+        Matrix.translateM(mTranslationMatrix, 0, -normalX, -normalY, 0f)
+        Matrix.multiplyMM(transform, 0, transform, 0 , mTranslationMatrix, 0)
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, transform, 0)
         // Draw triangle
         mTriangle?.draw(scratch)
     }

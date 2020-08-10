@@ -2,14 +2,20 @@ package com.reno.flippingcoinsgame
 
 import android.content.Context
 import android.opengl.GLSurfaceView
+import android.util.AttributeSet
 import android.view.MotionEvent
+import java.util.jar.Attributes
 
 
-class MyGLSurfaceView(context: Context?) : GLSurfaceView(context) {
+class MyGLSurfaceView : GLSurfaceView {
     private val mRenderer: MyGLRenderer
     private val TOUCH_SCALE_FACTOR = 180.0f / 320
     private var mPreviousX = 0f
     private var mPreviousY = 0f
+
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
     override fun onTouchEvent(e: MotionEvent): Boolean {
         // MotionEvent reports input details from the touch screen
         // and other input controls. In this case, you are only
@@ -38,6 +44,16 @@ class MyGLSurfaceView(context: Context?) : GLSurfaceView(context) {
         mPreviousX = x
         mPreviousY = y
         return true
+    }
+
+    fun setDegree(degree:Float) {
+        mRenderer.angle = degree
+        requestRender()
+    }
+
+    fun setScale(scale: Float) {
+        mRenderer.scale = scale
+        requestRender()
     }
 
     init {
