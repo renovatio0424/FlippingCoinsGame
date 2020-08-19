@@ -18,8 +18,9 @@ import android.util.Log;
  *
  */
 class MyGLRenderer : GLSurfaceView.Renderer {
-    private var mTriangle: Triangle? = null
+//    private var mTriangle: Triangle? = null
 //    private var mSquare: Square? = null
+    private var mCube: Cube? = null
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private val mMVPMatrix = FloatArray(16)
@@ -49,8 +50,9 @@ class MyGLRenderer : GLSurfaceView.Renderer {
         // Set the background frame color
         GLES20.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
 
-        mTriangle = Triangle()
+//        mTriangle = Triangle()
 //        mSquare = Square()
+        mCube = Cube()
     }
 
     override fun onDrawFrame(unused: GL10) {
@@ -71,7 +73,7 @@ class MyGLRenderer : GLSurfaceView.Renderer {
         // Leave this code out when using TouchEvents.
 //         val time = SystemClock.uptimeMillis() % 4000L
 //         val angle = 0.090f * time
-        Matrix.setRotateM(mRotationMatrix, 0, angle, 0f, 0f, 1.0f)
+        Matrix.setRotateM(mRotationMatrix, 0, angle, 1.0f, 1.0f, 1.0f)
         // Combine the rotation matrix with the projection and camera view
         // Note that the mMVPMatrix factor *must be first* in order
         // for the matrix multiplication product to be correct.
@@ -89,7 +91,9 @@ class MyGLRenderer : GLSurfaceView.Renderer {
         Matrix.multiplyMM(transform, 0, transform, 0 , mTranslationMatrix, 0)
         Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, transform, 0)
         // Draw triangle
-        mTriangle?.draw(scratch)
+//        mTriangle?.draw(scratch)
+//        mSquare?.draw(scratch)
+        mCube?.draw(scratch)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {
